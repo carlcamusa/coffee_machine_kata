@@ -1,10 +1,11 @@
-from doublex import Spy, assert_that, called, Stub, ANY_ARG, never
+from random import randint
+
+from doublex import Spy, assert_that, called, Stub, ANY_ARG
 
 from coffee_machine.credit_checker import CreditChecker
-from coffee_machine.customer_order import DrinkType, CustomerOrderFactory
-from coffee_machine.order_logic import OrderLogic
-from coffee_machine.sugar_quantity import SugarQuantityType
+from coffee_machine.customer_order import CustomerOrderFactory, DrinkType, SugarQuantityType
 from coffee_machine.drink_maker import DrinkMaker
+from coffee_machine.order_logic import OrderLogic
 
 
 def test_generates_a_command_for_a_tea_order():
@@ -51,16 +52,41 @@ def test_processes_an_order():
 
     assert_that(drink_maker_spy.set_command, called().with_args("T::"))
 
-def test_sends_no_command_when_there_is_not_enough_credit_available(a_pending_amount=None):
+
+def test_generates_a_message_command():
+    a_message = "blahblahblah"
+
+    assert OrderLogic.command_for_message(a_message) == f"M:{a_message}"
+
+
+def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
     an_order = CustomerOrderFactory.get(
         DrinkType.TEA,
         SugarQuantityType.NONE
     )
     drink_maker_spy = Spy(DrinkMaker)
+    a_pending_amount = randint(1, 10)
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(False)
+        credit_checker_stub.pending_amount_to(ANY_ARG).returns(a_pending_amount)
     order_logic = OrderLogic(an_order, drink_maker_spy, credit_checker_stub)
 
     order_logic.process_order()
 
-    assert_that(drink_maker_spy.set_command, never(called()))
+    assert_that(drink_maker_spy.set_command, called().with_args(f"M:{a_pending_amount}"))
+
+
+def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
+    an_order = CustomerOrderFactory.get(
+        DrinkType.TEA,
+        SugarQuantityType.NONE
+    )
+    drink_maker_spy = Spy(DrinkMaker)
+    available_credits = 0.1
+    credit_checker = CreditChecker(available_credits)
+    pending_amount = an_order.cost() - available_credits
+    order_logic = OrderLogic(an_order, drink_maker_spy, credit_checker)
+
+    order_logic.process_order()
+
+    assert_that(drink_maker_spy.set_command, called().with_args(f"M:{pending_amount}"))
