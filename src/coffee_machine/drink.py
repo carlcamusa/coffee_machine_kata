@@ -23,17 +23,29 @@ class Drink:
     def code(self):
         pass
 
+    def cost(self):
+        pass
+
 
 class TeaDrink(Drink):
     def code(self):
         return "T"
+
+    def cost(self):
+        return 0.4
 
 
 class CoffeeDrink(Drink):
     def code(self):
         return "C"
 
+    def cost(self):
+        return 0.6
+
 
 class ChocolateDrink(Drink):
     def code(self):
         return "H"
+
+    def cost(self):
+        return 0.5

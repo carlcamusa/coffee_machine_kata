@@ -24,3 +24,6 @@ class CustomerOrder:
 
     def has_sugar(self):
         return self.sugar_quantity.has_sugar()
+
+    def cost(self):
+        return self.drink.cost()
