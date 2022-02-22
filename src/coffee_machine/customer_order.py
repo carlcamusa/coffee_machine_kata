@@ -1,22 +1,17 @@
-from enum import Enum
+from coffee_machine.drink import Drink, DrinkType, DrinkFactory
 
 
-class DrinkType(Enum):
-    TEA = 0
-    COFFEE = 1
-    CHOCOLATE = 2
+class CustomerOrderFactory:
+    @staticmethod
+    def get(drink_type: DrinkType):
+        drink = DrinkFactory.get(drink_type)
+
+        return CustomerOrder(drink)
 
 
 class CustomerOrder:
-    def __init__(self, drink: DrinkType):
+    def __init__(self, drink: Drink):
         self.drink = drink
 
-    def command(self):
-        if self.drink == DrinkType.TEA:
-            return "T"
-        elif self.drink == DrinkType.COFFEE:
-            return "C"
-        elif self.drink == DrinkType.CHOCOLATE:
-            return "H"
-        else:
-            return ""
+    def drink_code(self):
+        return self.drink.code()
