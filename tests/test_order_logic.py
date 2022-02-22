@@ -1,10 +1,10 @@
 from doublex import Spy, assert_that, called, Stub, ANY_ARG, never
 
 from coffee_machine.credit_checker import CreditChecker
-from coffee_machine.customer_order import CustomerOrder, DrinkType, CustomerOrderFactory
+from coffee_machine.customer_order import DrinkType, CustomerOrderFactory
 from coffee_machine.order_logic import OrderLogic
 from coffee_machine.sugar_quantity import SugarQuantityType
-from drink_maker import DrinkMaker
+from coffee_machine.drink_maker import DrinkMaker
 
 
 def test_generates_a_command_for_a_tea_order():

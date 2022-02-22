@@ -1,6 +1,6 @@
 from coffee_machine.credit_checker import CreditChecker
 from coffee_machine.customer_order import CustomerOrder
-from drink_maker import DrinkMaker
+from coffee_machine.drink_maker import DrinkMaker
 
 
 class OrderLogic:
