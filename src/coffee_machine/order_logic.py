@@ -8,7 +8,7 @@ class OrderLogic:
         self.drink_maker = drink_maker
 
     def command_for_order(self):
-        return f"{self.order.drink_code()}::"
+        return f"{self.order.drink_code()}:{self.order.sugar_code()}:"
 
     def process_order(self) -> None:
         command = self.command_for_order()
