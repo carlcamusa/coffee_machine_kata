@@ -21,3 +21,6 @@ class CustomerOrder:
 
     def sugar_code(self):
         return self.sugar_quantity.code()
+
+    def has_sugar(self):
+        return self.sugar_quantity.has_sugar()

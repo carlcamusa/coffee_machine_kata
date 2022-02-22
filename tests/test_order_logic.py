@@ -13,7 +13,8 @@ def test_generates_a_command_for_a_tea_order():
 
     assert order_logic.command_for_order() == f"T::"
 
-def test_generates_a_command_for_a_single_sugar_order():
+
+def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
     an_order = CustomerOrderFactory.get(
         DrinkType.TEA,
         SugarQuantityType.SINGLE
@@ -21,7 +22,19 @@ def test_generates_a_command_for_a_single_sugar_order():
     drink_maker_fake = None
     order_logic = OrderLogic(an_order, drink_maker_fake)
 
-    assert order_logic.command_for_order() == f"T:1:"
+    assert order_logic.command_for_order() == f"T:1:0"
+
+
+def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
+    an_order = CustomerOrderFactory.get(
+        DrinkType.COFFEE,
+        SugarQuantityType.DOUBLE
+    )
+    drink_maker_fake = None
+    order_logic = OrderLogic(an_order, drink_maker_fake)
+
+    assert order_logic.command_for_order() == f"C:2:0"
+
 
 def test_processes_an_order():
     an_order = CustomerOrderFactory.get(DrinkType.TEA)

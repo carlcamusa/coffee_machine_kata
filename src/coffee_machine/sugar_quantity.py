@@ -5,7 +5,6 @@ class SugarQuantityType(Enum):
     SINGLE = 1
     DOUBLE = 2
 
-
 class SugarQuantityFactory:
     @staticmethod
     def get(quantity: SugarQuantityType):
@@ -23,17 +22,28 @@ class SugarQuantity:
     def code(self):
         pass
 
+    def has_sugar(self):
+        pass
 
 class NonSugarQuantity(SugarQuantity):
     def code(self):
         return ""
+
+    def has_sugar(self):
+        return False
 
 
 class SingleSugarQuantity(SugarQuantity):
     def code(self):
         return "1"
 
+    def has_sugar(self):
+        return True
+
 
 class DoubleSugarQuantity(SugarQuantity):
     def code(self):
         return "2"
+
+    def has_sugar(self):
+        return True
