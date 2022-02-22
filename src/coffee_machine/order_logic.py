@@ -1,2 +1,9 @@
+from coffee_machine.customer_order import CustomerOrder
+
+
 class OrderLogic:
-	pass
+    def __init__(self, order: CustomerOrder):
+        self.order = order
+
+    def command_for_order(self):
+        return f"{self.order.command()}::"
