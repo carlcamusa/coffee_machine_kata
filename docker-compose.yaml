@@ -1,0 +1,10 @@
+version: "2.2"
+services:
+    python-coffee-machine:
+        build: .
+        image: local/python-coffee-machine
+        working_dir: /code
+        environment:
+            HOME: /code
+        volumes:
+            - ".:/code:cached"
