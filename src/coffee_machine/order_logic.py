@@ -19,13 +19,7 @@ class OrderLogic:
         self.drink_maker.set_command(command)
 
     def command_for_order(self):
-        return f"{self.order.drink_code()}:{self.order.sugar_code()}:{self.stick_code()}"
-
-    def stick_code(self):
-        if self.order.has_sugar():
-            return "0"
-        else:
-            return ""
+        return f"{self.order.drink_code()}:{self.order.sugar_code()}:{self.order.stick_code()}"
 
     @staticmethod
     def command_for_message(message: str):

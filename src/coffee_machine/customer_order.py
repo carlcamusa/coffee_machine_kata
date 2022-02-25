@@ -22,8 +22,11 @@ class CustomerOrder:
     def sugar_code(self):
         return self.sugar_quantity.code()
 
-    def has_sugar(self):
-        return self.sugar_quantity.has_sugar()
+    def stick_code(self):
+        if self.sugar_quantity.has_sugar():
+            return "0"
+        else:
+            return ""
 
     def cost(self):
         return self.drink.cost()
