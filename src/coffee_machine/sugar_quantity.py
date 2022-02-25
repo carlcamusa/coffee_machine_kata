@@ -1,9 +1,11 @@
 from enum import Enum
 
+
 class SugarQuantityType(Enum):
     NONE = 0
     SINGLE = 1
     DOUBLE = 2
+
 
 class SugarQuantityFactory:
     @staticmethod
@@ -24,6 +26,7 @@ class SugarQuantity:
 
     def has_sugar(self):
         pass
+
 
 class NonSugarQuantity(SugarQuantity):
     def code(self):
