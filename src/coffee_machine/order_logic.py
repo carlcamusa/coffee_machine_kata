@@ -9,10 +9,10 @@ class OrderLogic:
         self.credit_checker = credit_checker
 
     def process_order(self, order: CustomerOrder) -> None:
-        if self.credit_checker.enough_credits_available_for(order.cost()):
+        if self.credit_checker.enough_credits_available_for(order.drink_type()):
             command = self.command_for_order(order)
         else:
-            pending_credits = self.credit_checker.pending_amount_to(order.cost())
+            pending_credits = self.credit_checker.pending_amount_to(order.drink_type())
             command = self.command_for_message(pending_credits)
 
         self.drink_maker.set_command(command)

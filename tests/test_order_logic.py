@@ -79,13 +79,14 @@ def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit
 def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
     drink_maker_spy = Spy(DrinkMaker)
     available_credits = 0.1
-    credit_checker = CreditChecker(available_credits)
+    credit_checker = CreditChecker(available_credits=available_credits)
     order_logic = OrderLogic(drink_maker_spy, credit_checker)
+    a_drink_type = DrinkType.TEA
     an_order = CustomerOrderFactory.get(
-        DrinkType.TEA,
+        a_drink_type,
         SugarQuantityType.NONE
     )
-    pending_amount = an_order.cost() - available_credits
+    pending_amount = credit_checker.beverage_cost[a_drink_type] - available_credits
 
     order_logic.process_order(an_order)
 

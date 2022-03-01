@@ -16,6 +16,9 @@ class CustomerOrder:
         self.drink = drink
         self.sugar_quantity = sugar_quantity
 
+    def drink_type(self):
+        return self.drink.type
+
     def drink_code(self):
         return self.drink.code()
 
@@ -28,5 +31,4 @@ class CustomerOrder:
         else:
             return ""
 
-    def cost(self):
-        return self.drink.cost()
+

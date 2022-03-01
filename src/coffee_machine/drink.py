@@ -9,22 +9,22 @@ class DrinkType(Enum):
 
 class DrinkFactory:
     @staticmethod
-    def get(drink: DrinkType):
-        if drink == DrinkType.TEA:
-            return TeaDrink()
-        elif drink == DrinkType.COFFEE:
-            return CoffeeDrink()
-        elif drink == DrinkType.CHOCOLATE:
-            return ChocolateDrink()
+    def get(drink_type: DrinkType):
+        if drink_type == DrinkType.TEA:
+            return TeaDrink(drink_type)
+        elif drink_type == DrinkType.COFFEE:
+            return CoffeeDrink(drink_type)
+        elif drink_type == DrinkType.CHOCOLATE:
+            return ChocolateDrink(drink_type)
         else:
             return None
 
 
 class Drink:
-    def code(self):
-        pass
+    def __init__(self, type: DrinkType):
+        self.type = type
 
-    def cost(self):
+    def code(self):
         pass
 
 
@@ -32,21 +32,12 @@ class TeaDrink(Drink):
     def code(self):
         return "T"
 
-    def cost(self):
-        return 0.4
-
 
 class CoffeeDrink(Drink):
     def code(self):
         return "C"
 
-    def cost(self):
-        return 0.6
-
 
 class ChocolateDrink(Drink):
     def code(self):
         return "H"
-
-    def cost(self):
-        return 0.5
