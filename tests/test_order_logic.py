@@ -1,6 +1,6 @@
 from random import randint
 
-from doublex import Spy, assert_that, called, Stub, ANY_ARG
+from doublex import Spy, assert_that, called, Stub, ANY_ARG, Mimic
 
 from coffee_machine.credit_checker import CreditChecker
 from coffee_machine.customer_order import CustomerOrderFactory, DrinkType, SugarQuantityType
@@ -42,7 +42,7 @@ def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
 
 
 def test_processes_an_order():
-    drink_maker_spy = Spy(DrinkMaker)
+    drink_maker_spy = Mimic(Spy, DrinkMaker)
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
     order_logic = OrderLogic(drink_maker_spy, credit_checker_stub)
@@ -60,7 +60,7 @@ def test_generates_a_message_command():
 
 
 def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
-    drink_maker_spy = Spy(DrinkMaker)
+    drink_maker_spy = Mimic(Spy, DrinkMaker)
     a_pending_amount = randint(1, 10)
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(False)
@@ -77,7 +77,7 @@ def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit
 
 
 def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
-    drink_maker_spy = Spy(DrinkMaker)
+    drink_maker_spy = Mimic(Spy, DrinkMaker)
     available_credits = 0.1
     credit_checker = CreditChecker(available_credits=available_credits)
     order_logic = OrderLogic(drink_maker_spy, credit_checker)
