@@ -1,6 +1,8 @@
 from random import randint
 
-from doublex import Spy, assert_that, called, Stub, ANY_ARG, Mimic
+from doublex import Spy, Stub, ANY_ARG, Mimic
+from doublex_expects import have_been_called_with
+from expects import expect
 
 from coffee_machine.coffee_machine import CoffeeMachine
 from coffee_machine.credit_checker import CreditChecker
@@ -18,7 +20,7 @@ class TestCoffeeMachine:
 
         coffee_machine.process_order(an_order)
 
-        assert_that(drink_maker_spy.set_command, called().with_args("T::"))
+        expect(drink_maker_spy.set_command).to(have_been_called_with("T::"))
 
     def test_processes_a_single_sugar_with_a_stick_order(self):
         drink_maker_spy = Mimic(Spy, DrinkMaker)
@@ -32,7 +34,7 @@ class TestCoffeeMachine:
 
         coffee_machine.process_order(an_order)
 
-        assert_that(drink_maker_spy.set_command, called().with_args("T:1:0"))
+        expect(drink_maker_spy.set_command).to(have_been_called_with("T:1:0"))
 
     def test_processes_a_double_sugar_with_a_stick_order(self):
         drink_maker_spy = Mimic(Spy, DrinkMaker)
@@ -46,7 +48,7 @@ class TestCoffeeMachine:
 
         coffee_machine.process_order(an_order)
 
-        assert_that(drink_maker_spy.set_command, called().with_args("C:2:0"))
+        expect(drink_maker_spy.set_command).to(have_been_called_with("C:2:0"))
 
 
     def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available(self):
@@ -63,8 +65,7 @@ class TestCoffeeMachine:
 
         coffee_machine.process_order(an_order)
 
-        assert_that(drink_maker_spy.set_command, called().with_args(f"M:{a_pending_amount}"))
-
+        expect(drink_maker_spy.set_command).to(have_been_called_with(f"M:{a_pending_amount}"))
 
     def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available(self):
         drink_maker_spy = Mimic(Spy, DrinkMaker)
@@ -80,4 +81,4 @@ class TestCoffeeMachine:
 
         coffee_machine.process_order(an_order)
 
-        assert_that(drink_maker_spy.set_command, called().with_args(f"M:{pending_amount}"))
+        expect(drink_maker_spy.set_command).to(have_been_called_with(f"M:{pending_amount}"))
