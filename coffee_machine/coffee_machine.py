@@ -17,7 +17,8 @@ class CoffeeMachine:
 
         self.drink_maker.set_command(command)
 
-    def command_for_order(self, order: CustomerOrder):
+    @staticmethod
+    def command_for_order(order: CustomerOrder):
         return f"{order.drink_code()}:{order.sugar_code()}:{order.stick_code()}"
 
     @staticmethod
