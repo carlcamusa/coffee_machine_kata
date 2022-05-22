@@ -3,7 +3,7 @@ from coffee_machine.customer_order import CustomerOrder
 from coffee_machine.drink_maker import DrinkMaker
 
 
-class OrderLogic:
+class CoffeeMachine:
     def __init__(self, drink_maker: DrinkMaker, credit_checker: CreditChecker):
         self.drink_maker = drink_maker
         self.credit_checker = credit_checker

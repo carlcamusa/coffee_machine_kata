@@ -2,19 +2,19 @@ from random import randint
 
 from doublex import Spy, assert_that, called, Stub, ANY_ARG, Mimic
 
+from coffee_machine.coffee_machine import CoffeeMachine
 from coffee_machine.credit_checker import CreditChecker
 from coffee_machine.customer_order import CustomerOrderFactory, DrinkType, SugarQuantityType
 from coffee_machine.drink_maker import DrinkMaker
-from coffee_machine.order_logic import OrderLogic
 
 
 def test_generates_a_command_for_a_tea_order():
     drink_maker_fake = None
     credit_checker_fake = None
-    order_logic = OrderLogic(drink_maker_fake, credit_checker_fake)
+    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
     an_order = CustomerOrderFactory.get(DrinkType.TEA)
 
-    assert order_logic.command_for_order(an_order) == f"T::"
+    assert coffee_machine.command_for_order(an_order) == f"T::"
 
 
 def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
@@ -24,9 +24,9 @@ def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
         DrinkType.TEA,
         SugarQuantityType.SINGLE
     )
-    order_logic = OrderLogic(drink_maker_fake, credit_checker_fake)
+    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
 
-    assert order_logic.command_for_order(an_order) == f"T:1:0"
+    assert coffee_machine.command_for_order(an_order) == f"T:1:0"
 
 
 def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
@@ -36,19 +36,19 @@ def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
         DrinkType.COFFEE,
         SugarQuantityType.DOUBLE
     )
-    order_logic = OrderLogic(drink_maker_fake, credit_checker_fake)
+    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
 
-    assert order_logic.command_for_order(an_order) == f"C:2:0"
+    assert coffee_machine.command_for_order(an_order) == f"C:2:0"
 
 
 def test_processes_an_order():
     drink_maker_spy = Mimic(Spy, DrinkMaker)
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
-    order_logic = OrderLogic(drink_maker_spy, credit_checker_stub)
+    coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
     an_order = CustomerOrderFactory.get(DrinkType.TEA)
 
-    order_logic.process_order(an_order)
+    coffee_machine.process_order(an_order)
 
     assert_that(drink_maker_spy.set_command, called().with_args("T::"))
 
@@ -56,7 +56,7 @@ def test_processes_an_order():
 def test_generates_a_message_command():
     a_message = "blahblahblah"
 
-    assert OrderLogic.command_for_message(a_message) == f"M:{a_message}"
+    assert CoffeeMachine.command_for_message(a_message) == f"M:{a_message}"
 
 
 def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
@@ -65,13 +65,13 @@ def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(False)
         credit_checker_stub.pending_amount_to(ANY_ARG).returns(a_pending_amount)
-    order_logic = OrderLogic(drink_maker_spy, credit_checker_stub)
+    coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
     an_order = CustomerOrderFactory.get(
         DrinkType.TEA,
         SugarQuantityType.NONE
     )
 
-    order_logic.process_order(an_order)
+    coffee_machine.process_order(an_order)
 
     assert_that(drink_maker_spy.set_command, called().with_args(f"M:{a_pending_amount}"))
 
@@ -80,7 +80,7 @@ def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_e
     drink_maker_spy = Mimic(Spy, DrinkMaker)
     available_credits = 0.1
     credit_checker = CreditChecker(available_credits=available_credits)
-    order_logic = OrderLogic(drink_maker_spy, credit_checker)
+    coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker)
     a_drink_type = DrinkType.TEA
     an_order = CustomerOrderFactory.get(
         a_drink_type,
@@ -88,6 +88,6 @@ def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_e
     )
     pending_amount = credit_checker.beverage_cost[a_drink_type] - available_credits
 
-    order_logic.process_order(an_order)
+    coffee_machine.process_order(an_order)
 
     assert_that(drink_maker_spy.set_command, called().with_args(f"M:{pending_amount}"))
