@@ -14,7 +14,7 @@ def test_generates_a_command_for_a_tea_order():
     coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
     an_order = CustomerOrderFactory.get(DrinkType.TEA)
 
-    assert coffee_machine.command_for_order(an_order) == f"T::"
+    assert coffee_machine._command_for_order(an_order) == f"T::"
 
 
 def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
@@ -26,7 +26,7 @@ def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
     )
     coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
 
-    assert coffee_machine.command_for_order(an_order) == f"T:1:0"
+    assert coffee_machine._command_for_order(an_order) == f"T:1:0"
 
 
 def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
@@ -38,7 +38,7 @@ def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
     )
     coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
 
-    assert coffee_machine.command_for_order(an_order) == f"C:2:0"
+    assert coffee_machine._command_for_order(an_order) == f"C:2:0"
 
 
 def test_processes_an_order():
@@ -56,7 +56,7 @@ def test_processes_an_order():
 def test_generates_a_message_command():
     a_message = "blahblahblah"
 
-    assert CoffeeMachine.command_for_message(a_message) == f"M:{a_message}"
+    assert CoffeeMachine._command_for_message(a_message) == f"M:{a_message}"
 
 
 def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
