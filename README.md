@@ -6,8 +6,8 @@ More information at: [Coffee Machine Kata](https://simcap.github.io/coffeemachin
 
 ## Run the tests
 
-To **run the test suite** you just need to execute:
+To **run the test suite**, you just need to execute:
 
 ```
-make
+make test
 ```
