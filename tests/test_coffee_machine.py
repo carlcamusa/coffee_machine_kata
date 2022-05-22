@@ -8,40 +8,7 @@ from coffee_machine.customer_order import CustomerOrderFactory, DrinkType, Sugar
 from coffee_machine.drink_maker import DrinkMaker
 
 
-def test_generates_a_command_for_a_tea_order():
-    drink_maker_fake = None
-    credit_checker_fake = None
-    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
-    an_order = CustomerOrderFactory.get(DrinkType.TEA)
-
-    assert coffee_machine._command_for_order(an_order) == f"T::"
-
-
-def test_generates_a_command_for_a_single_sugar_with_a_stick_order():
-    drink_maker_fake = None
-    credit_checker_fake = None
-    an_order = CustomerOrderFactory.get(
-        DrinkType.TEA,
-        SugarQuantityType.SINGLE
-    )
-    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
-
-    assert coffee_machine._command_for_order(an_order) == f"T:1:0"
-
-
-def test_generates_a_command_for_a_double_sugar_with_a_stick_order():
-    drink_maker_fake = None
-    credit_checker_fake = None
-    an_order = CustomerOrderFactory.get(
-        DrinkType.COFFEE,
-        SugarQuantityType.DOUBLE
-    )
-    coffee_machine = CoffeeMachine(drink_maker_fake, credit_checker_fake)
-
-    assert coffee_machine._command_for_order(an_order) == f"C:2:0"
-
-
-def test_processes_an_order():
+def test_processes_a_non_sugar_tea_order():
     drink_maker_spy = Mimic(Spy, DrinkMaker)
     with Stub(CreditChecker) as credit_checker_stub:
         credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
@@ -52,11 +19,33 @@ def test_processes_an_order():
 
     assert_that(drink_maker_spy.set_command, called().with_args("T::"))
 
+def test_processes_a_single_sugar_with_a_stick_order():
+    drink_maker_spy = Mimic(Spy, DrinkMaker)
+    with Stub(CreditChecker) as credit_checker_stub:
+        credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
+    coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+    an_order = CustomerOrderFactory.get(
+        DrinkType.TEA,
+        SugarQuantityType.SINGLE
+    )
 
-def test_generates_a_message_command():
-    a_message = "blahblahblah"
+    coffee_machine.process_order(an_order)
 
-    assert CoffeeMachine._command_for_message(a_message) == f"M:{a_message}"
+    assert_that(drink_maker_spy.set_command, called().with_args("T:1:0"))
+
+def test_processes_a_double_sugar_with_a_stick_order():
+    drink_maker_spy = Mimic(Spy, DrinkMaker)
+    with Stub(CreditChecker) as credit_checker_stub:
+        credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
+    coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+    an_order = CustomerOrderFactory.get(
+        DrinkType.COFFEE,
+        SugarQuantityType.DOUBLE
+    )
+
+    coffee_machine.process_order(an_order)
+
+    assert_that(drink_maker_spy.set_command, called().with_args("C:2:0"))
 
 
 def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available():
