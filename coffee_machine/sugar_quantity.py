@@ -1,3 +1,4 @@
+from abc import abstractmethod, ABC
 from enum import Enum
 
 
@@ -20,10 +21,12 @@ class SugarQuantityFactory:
             return None
 
 
-class SugarQuantity:
+class SugarQuantity(ABC):
+    @abstractmethod
     def code(self):
         pass
 
+    @abstractmethod
     def has_sugar(self):
         pass
 

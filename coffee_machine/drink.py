@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from enum import Enum
 
 
@@ -20,10 +21,10 @@ class DrinkFactory:
             return None
 
 
-class Drink:
+class Drink(ABC):
     def __init__(self, type: DrinkType):
         self.type = type
-
+    @abstractmethod
     def code(self):
         pass
 
