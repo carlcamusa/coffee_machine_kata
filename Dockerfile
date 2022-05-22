@@ -12,6 +12,3 @@ RUN pip install -r requirements.txt
 
 # copy the content of the local directory to the working directory
 COPY . .
-
-# make the project an editable install
-RUN pip install -e ".[tests]"

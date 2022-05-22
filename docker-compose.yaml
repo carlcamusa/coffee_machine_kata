@@ -7,4 +7,4 @@ services:
         environment:
             HOME: /code
         volumes:
-            - ".:/code:cached"
+            - ".:/code"
