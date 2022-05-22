@@ -7,4 +7,4 @@ help:  ## Show this help.
 
 .PHONY: test
 test:  ## Run the test suite
-	docker-compose run --rm python-coffee-machine pytest
+	docker-compose run --rm python-coffee-machine pytest -rA
