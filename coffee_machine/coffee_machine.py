@@ -8,7 +8,7 @@ class CoffeeMachine:
         self.drink_maker = drink_maker
         self.credit_checker = credit_checker
 
-    def process_order(self, order: CustomerOrder) -> None:
+    def process_order(self, order: CustomerOrder):
         if self.credit_checker.enough_credits_available_for(order.drink_type()):
             command = self._command_for_order(order)
         else:
