@@ -1,7 +1,7 @@
 from coffee_machine.customer_order import CustomerOrderFactory, DrinkType
 from coffee_machine.sugar_quantity import SugarQuantityType
 
-class TestCustomerOrder():
+class TestCustomerOrder:
     def test_a_non_sugar_tea_order_drink_code(self):
         customer_order = CustomerOrderFactory.get(DrinkType.TEA, SugarQuantityType.NONE)
         assert customer_order.drink_code() == "T"

@@ -1,6 +1,6 @@
 from coffee_machine.drink import DrinkFactory, DrinkType
 
-class TestDrink():
+class TestDrink:
     def test_tea_drink_code_and_cost(self):
         drink = DrinkFactory.get(DrinkType.TEA)
         assert drink.code() == "T"

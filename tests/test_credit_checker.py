@@ -1,7 +1,7 @@
 from coffee_machine.credit_checker import CreditChecker, DEFAULT_BEVERAGE_COST
 from coffee_machine.drink import DrinkType
 
-class TestCreditChecker():
+class TestCreditChecker:
     def test_ok_when_there_is_more_than_enough_credit(self):
         a_drink_type = DrinkType.TEA
         available_credit = DEFAULT_BEVERAGE_COST[a_drink_type] + 1

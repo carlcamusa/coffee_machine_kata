@@ -1,6 +1,6 @@
 from coffee_machine.sugar_quantity import SugarQuantityFactory, SugarQuantityType
 
-class SugarQuantity():
+class SugarQuantity:
     def test_non_sugar_code(self):
         sugar_quantity = SugarQuantityFactory.get(SugarQuantityType.NONE)
         assert sugar_quantity.code() == ""
