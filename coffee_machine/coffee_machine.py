@@ -11,10 +11,10 @@ class CoffeeMachine:
         self.credit_checker = credit_checker
 
     def process_order(self, order: CustomerOrder):
-        if self.credit_checker.enough_credits_available_for(order.drink_type()):
+        if self.credit_checker.enough_credits_available_for(order.drink_type):
             command = self.drink_maker_protocol.command_for_order(order)
         else:
-            pending_credits = self.credit_checker.pending_amount_to(order.drink_type())
+            pending_credits = self.credit_checker.pending_amount_to(order.drink_type)
             command = self.drink_maker_protocol.command_for_message(pending_credits)
 
         self.drink_maker.set_command(command)
