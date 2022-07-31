@@ -8,14 +8,16 @@ from coffee_machine.coffee_machine import CoffeeMachine
 from coffee_machine.credit_checker import CreditChecker
 from coffee_machine.customer_order import CustomerOrderFactory, DrinkType, SugarQuantityType
 from coffee_machine.drink_maker import DrinkMaker
+from coffee_machine.drink_maker_protocol import DrinkMakerProtocol
 
 
 class TestCoffeeMachine:
     def test_processes_a_non_sugar_tea_order(self):
+        drink_maker_protocol = DrinkMakerProtocol()
         drink_maker_spy = Mimic(Spy, DrinkMaker)
         with Stub(CreditChecker) as credit_checker_stub:
             credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
-        coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+        coffee_machine = CoffeeMachine(drink_maker_protocol, drink_maker_spy, credit_checker_stub)
         an_order = CustomerOrderFactory.get(DrinkType.TEA)
 
         coffee_machine.process_order(an_order)
@@ -23,10 +25,11 @@ class TestCoffeeMachine:
         expect(drink_maker_spy.set_command).to(have_been_called_with("T::"))
 
     def test_processes_a_single_sugar_with_a_stick_order(self):
+        drink_maker_protocol = DrinkMakerProtocol()
         drink_maker_spy = Mimic(Spy, DrinkMaker)
         with Stub(CreditChecker) as credit_checker_stub:
             credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
-        coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+        coffee_machine = CoffeeMachine(drink_maker_protocol, drink_maker_spy, credit_checker_stub)
         an_order = CustomerOrderFactory.get(
             DrinkType.TEA,
             SugarQuantityType.SINGLE
@@ -37,10 +40,11 @@ class TestCoffeeMachine:
         expect(drink_maker_spy.set_command).to(have_been_called_with("T:1:0"))
 
     def test_processes_a_double_sugar_with_a_stick_order(self):
+        drink_maker_protocol = DrinkMakerProtocol()
         drink_maker_spy = Mimic(Spy, DrinkMaker)
         with Stub(CreditChecker) as credit_checker_stub:
             credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(True)
-        coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+        coffee_machine = CoffeeMachine(drink_maker_protocol, drink_maker_spy, credit_checker_stub)
         an_order = CustomerOrderFactory.get(
             DrinkType.COFFEE,
             SugarQuantityType.DOUBLE
@@ -52,12 +56,13 @@ class TestCoffeeMachine:
 
 
     def test_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available(self):
+        drink_maker_protocol = DrinkMakerProtocol()
         drink_maker_spy = Mimic(Spy, DrinkMaker)
         a_pending_amount = randint(1, 10)
         with Stub(CreditChecker) as credit_checker_stub:
             credit_checker_stub.enough_credits_available_for(ANY_ARG).returns(False)
             credit_checker_stub.pending_amount_to(ANY_ARG).returns(a_pending_amount)
-        coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker_stub)
+        coffee_machine = CoffeeMachine(drink_maker_protocol, drink_maker_spy, credit_checker_stub)
         an_order = CustomerOrderFactory.get(
             DrinkType.TEA,
             SugarQuantityType.NONE
@@ -68,10 +73,11 @@ class TestCoffeeMachine:
         expect(drink_maker_spy.set_command).to(have_been_called_with(f"M:{a_pending_amount}"))
 
     def test_integration_sends_a_message_with_the_pending_amount_when_there_is_not_enough_credit_available(self):
+        drink_maker_protocol = DrinkMakerProtocol()
         drink_maker_spy = Mimic(Spy, DrinkMaker)
         available_credits = 0.1
         credit_checker = CreditChecker(available_credits=available_credits)
-        coffee_machine = CoffeeMachine(drink_maker_spy, credit_checker)
+        coffee_machine = CoffeeMachine(drink_maker_protocol, drink_maker_spy, credit_checker)
         a_drink_type = DrinkType.TEA
         an_order = CustomerOrderFactory.get(
             a_drink_type,
