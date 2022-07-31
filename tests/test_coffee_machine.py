@@ -12,7 +12,7 @@ from coffee_machine.drink_maker_protocol import DrinkMakerProtocol
 
 
 class TestCoffeeMachine:
-    def test_processes_an_order(self):
+    def test_processes_a_non_sugar_tea_order(self):
         any_order_command = "any-order-command"
         with Mimic(Stub, DrinkMakerProtocol) as drink_maker_protocol:
             drink_maker_protocol.command_for_order(ANY_ARG).returns(any_order_command)
